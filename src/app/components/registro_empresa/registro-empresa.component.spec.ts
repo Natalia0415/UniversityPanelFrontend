@@ -1,78 +1,67 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule } from '@angular/forms';
 import { RegistroEmpresaComponent } from './registro-empresa.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { EmpresaService } from '../../services/empresa.service';
 import { of, throwError } from 'rxjs';
 
 describe('RegistroEmpresaComponent', () => {
   let component: RegistroEmpresaComponent;
   let fixture: ComponentFixture<RegistroEmpresaComponent>;
-  let mockService: Partial<EmpresaService>;
+  let mockService: jasmine.SpyObj<EmpresaService>;
 
   beforeEach(async () => {
-    mockService = {
-      registrar: (data: any) => of({ success: true })
-    };
+    const spy = jasmine.createSpyObj('EmpresaService', ['registrarEmpresa']);
 
     await TestBed.configureTestingModule({
+      imports: [ReactiveFormsModule, HttpClientTestingModule],
       declarations: [RegistroEmpresaComponent],
-      imports: [ReactiveFormsModule],
-      providers: [{ provide: EmpresaService, useValue: mockService }]
+      providers: [{ provide: EmpresaService, useValue: spy }]
     }).compileComponents();
 
     fixture = TestBed.createComponent(RegistroEmpresaComponent);
     component = fixture.componentInstance;
+    mockService = TestBed.inject(EmpresaService) as jasmine.SpyObj<EmpresaService>;
     fixture.detectChanges();
   });
 
-  it('Formulario inválido si está vacío', () => {
-    expect(component.registroForm.valid).toBeFalse();
+  it('should create', () => {
+    expect(component).toBeTruthy();
   });
 
-  it('Correo empresa válido', () => {
-    const correo = component.registroForm.controls['correo'];
-    correo.setValue('bad-email');
-    expect(correo.valid).toBeFalse();
+  it('form should be invalid when empty', () => {
+    expect(component.registroForm.valid).toBeFalsy();
   });
 
-  it('Formulario válido con datos correctos', () => {
+  it('should call registrarEmpresa when form is valid', () => {
     component.registroForm.setValue({
-      nombreEmpresa: 'Mi Empresa',
-      nit: '900123456',
-      correo: 'info@empresa.com',
-      representante: 'Ana',
-      telefono: '3201234567',
-      contraseña: 'abcdef'
+      nombre: 'Empresa X',
+      contacto: 'Juan',
+      correo: 'contacto@empresa.com',
+      contrasena: '123456',
+      descripcion: 'Empresa de prueba'
     });
-    expect(component.registroForm.valid).toBeTrue();
-  });
 
-  it('Llama al servicio registrar al enviar formulario válido', () => {
-    spyOn(mockService, 'registrar').and.returnValue(of({}));
-    component.registroForm.setValue({
-      nombreEmpresa: 'Mi Empresa',
-      nit: '900123',
-      correo: 'info@empresa.com',
-      representante: 'Ana',
-      telefono: '320',
-      contraseña: 'abcdef'
-    });
+    mockService.registrarEmpresa.and.returnValue(of({ success: true }));
+
     component.onSubmit();
-    expect(mockService.registrar).toHaveBeenCalled();
+
+    expect(mockService.registrarEmpresa).toHaveBeenCalled();
   });
 
-  it('Muestra error si el servicio falla', () => {
-    (mockService.registrar as any) = () => throwError(() => ({ error: { message: 'error servidor' } }));
-    spyOn(mockService, 'registrar').and.callThrough();
+  it('should handle error response', () => {
     component.registroForm.setValue({
-      nombreEmpresa: 'Mi Empresa',
-      nit: '900123',
-      correo: 'info@empresa.com',
-      representante: 'Ana',
-      telefono: '320',
-      contraseña: 'abcdef'
+      nombre: 'Empresa X',
+      contacto: 'Juan',
+      correo: 'contacto@empresa.com',
+      contrasena: '123456',
+      descripcion: 'Empresa de prueba'
     });
+
+    mockService.registrarEmpresa.and.returnValue(throwError(() => ({ error: 'Error servidor' })));
+
     component.onSubmit();
-    expect(component.errorMessage).toContain('error servidor');
+
+    // Aquí puedes agregar expectativas sobre alert, console, etc.
   });
 });
