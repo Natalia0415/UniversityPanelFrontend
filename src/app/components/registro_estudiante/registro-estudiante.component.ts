@@ -16,7 +16,6 @@ import { Register } from '../../interfaces/Registrar';
 export class RegistroEstudianteComponent {
    // Inyectar los servicios necesarios
   private estudianteService = inject(EstudianteService);
-  private router = inject(Router);
   public formBuild = inject(FormBuilder);
   public errorMessage: string = '';
 
