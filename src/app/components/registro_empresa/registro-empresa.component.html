@@ -1,0 +1,41 @@
+<div class="registro-wrapper">
+  <div class="registro-container">
+    <h2>Registro de Empresa</h2>
+
+    <form [formGroup]="registroForm" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label>Nombre de la Empresa</label>
+        <input type="text" formControlName="nombre" placeholder="Nombre de la empresa" />
+      </div>
+
+      <div class="form-group">
+        <label>Contacto</label>
+        <input type="text" formControlName="contacto" placeholder="Nombre del contacto" />
+      </div>
+
+      <div class="form-group">
+        <label>Correo Electrónico</label>
+        <input type="email" formControlName="correo" placeholder="correo@empresa.com" />
+      </div>
+
+      <div class="form-group">
+        <label>Contraseña</label>
+        <input type="password" formControlName="contrasena" placeholder="********" />
+      </div>
+
+      <div class="form-group">
+        <label>Descripción</label>
+        <textarea formControlName="descripcion" rows="3" placeholder="Describe brevemente tu empresa..."></textarea>
+      </div>
+
+      <div class="button-group">
+        <button type="submit" [disabled]="registroForm.invalid">Registrar</button>
+        <button type="reset" class="btn-secundario">Limpiar</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="registro-imagen">
+    <img src="assets/mock-empresa.png" alt="Registro empresa" />
+  </div>
+</div>
