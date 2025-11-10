@@ -5,27 +5,22 @@
     <form [formGroup]="registroForm" (ngSubmit)="onSubmit()">
       <div class="form-group">
         <label>Nombre Completo</label>
-        <input type="text" formControlName="nombre" placeholder="Ingresa tu nombre completo" />
+        <input type="text" formControlName="userName" placeholder="Ingresa tu nombre completo" />
       </div>
 
       <div class="form-group">
         <label>Correo Electrónico</label>
-        <input type="email" formControlName="correo" placeholder="correo@ejemplo.com" />
+        <input type="email" formControlName="email" placeholder="correo@ejemplo.com" />
       </div>
 
       <div class="form-group">
         <label>Contraseña</label>
-        <input type="password" formControlName="contrasena" placeholder="********" />
+        <input type="password" formControlName="passWord" placeholder="********" />
       </div>
 
       <div class="form-group">
-        <label>Rol</label>
-        <select formControlName="rol">
-          <option value="">Seleccione un rol</option>
-          <option value="estudiante">Estudiante</option>
-          <option value="tutor">Tutor</option>
-          <option value="empleador">Empleador</option>
-        </select>
+        <label>Confirmar Contraseña</label>
+        <input type="password" formControlName="confirmPassWord" placeholder="********" />
       </div>
 
       <div class="button-group">
